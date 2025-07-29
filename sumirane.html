@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .calculator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input, select, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Calculator</h1>
+
+<div class="calculator">
+  <label for="num1"></label><input type="number" id="num1" placeholder="First number">
+
+  <label for="operation"></label><select id="operation">
+    <option value="add">ADD (+)</option>
+    <option value="subtract">SUBTRACT (-)</option>
+    <option value="multiply">MULTIPLY (×)</option>
+    <option value="divide">DIVIDE (÷)</option>
+  </select>
+
+  <label for="num2"></label><input type="number" id="num2" placeholder="Second number">
+
+  <button onclick="calculate()">=</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<script>
+  function calculate() {
+    const num1 = parseFloat(document.getElementById('num1').value);
+    const num2 = parseFloat(document.getElementById('num2').value);
+    const operation = document.getElementById('operation').value;
+    let result;
+
+    if (isNaN(num1) || isNaN(num2)) {
+      result = "Please enter valid numbers.";
+    } else {
+      switch (operation) {
+        case 'add':
+          result = num1 + num2;
+          break;
+        case 'subtract':
+          result = num1 - num2;
+          break;
+        case 'multiply':
+          result = num1 * num2;
+          break;
+        case 'divide':
+          result = num2 === 0 ? "Error: Cannot divide by zero." : num1 / num2;
+          break;
+        default:
+          result = "Unknown operation.";
+      }
+    }
+
+    document.getElementById('result').textContent = "Result: " + result;
+  }
+</script>
+
+</body>
+</html>
+
+
+
