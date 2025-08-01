@@ -33,7 +33,7 @@
 <h1>Calculator</h1>
 
 <div class="calculator">
-  <label for="num1"></label><input type="number" id="num1" placeholder="First number">
+  <label for="num1"></label><input type="number" id="num1" placeholder="First number" autofocus>
 
   <label for="operation"></label><select id="operation">
     <option value="add">ADD (+)</option>
@@ -44,20 +44,24 @@
 
   <label for="num2"></label><input type="number" id="num2" placeholder="Second number">
 
-  <button onclick="calculate()">=</button>
 </div>
 
 <div class="result" id="result"></div>
 
 <script>
+  const num1El = document.getElementById('num1');
+  const num2El = document.getElementById('num2');
+  const operationEl = document.getElementById('operation');
+  const resultEl = document.getElementById('result');
+
   function calculate() {
-    const num1 = parseFloat(document.getElementById('num1').value);
-    const num2 = parseFloat(document.getElementById('num2').value);
-    const operation = document.getElementById('operation').value;
+    const num1 = parseFloat(num1El.value);
+    const num2 = parseFloat(num2El.value);
+    const operation = operationEl.value;
     let result;
 
     if (isNaN(num1) || isNaN(num2)) {
-      result = "Please enter valid numbers.";
+      result = "";
     } else {
       switch (operation) {
         case 'add':
@@ -77,8 +81,14 @@
       }
     }
 
-    document.getElementById('result').textContent = "Result: " + result;
+    resultEl.textContent = result !== "" ? "Result: " + result : "";
   }
+
+  // Auto-trigger calculation on input changes
+  num1El.addEventListener('input', calculate);
+  num2El.addEventListener('input', calculate);
+  operationEl.addEventListener('change', calculate);
+
 </script>
 
 </body>
