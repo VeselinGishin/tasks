@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quadratic Equation </title>
+</head>
+<body>
+<h2>Quadratic Equation : ax² + bx + c = 0</h2>
+
+<label for="a">a:</label>
+<input type="number" id="a" step="any"><br>
+
+<label for="b">b:</label>
+<input type="number" id="b" step="any"><br>
+
+<label for="c">c:</label>
+<input type="number" id="c" step="any"><br><br>
+
+<p id="result"></p>
+
+<script>
+    function solveQuadratic() {
+        const a = parseFloat(document.getElementById("a").value);
+        const b = parseFloat(document.getElementById("b").value);
+        const c = parseFloat(document.getElementById("c").value);
+        const resultElement = document.getElementById("result");
+
+        if (isNaN(a) || isNaN(b) || isNaN(c)) {
+            resultElement.textContent = "";
+            return;
+        }
+
+        if (a === 0) {
+            resultElement.textContent = "This is not a quadratic equation.";
+            return;
+        }
+
+        const discriminant = Math.pow(b, 2) - 4 * a * c;
+        if (discriminant < 0) {
+            resultElement.textContent = "No real roots.";
+            return;
+        }
+
+        const sqrtDisc = Math.sqrt(discriminant);
+        const signB = Math.sign(-b);
+
+        const q = -0.5 * (b + signB * sqrtDisc);
+        const x1 = q / a;
+        const x2 = c / q;
+
+        resultElement.textContent = `Roots: x1 = ${x1}, x2 = ${x2}`;
+    }
+
+    // Listen to input changes and solve automatically
+    ["a", "b", "c"].forEach(id => {
+        document.getElementById(id).addEventListener("input", solveQuadratic);
+    });
+</script>
+</body>
+</html>
