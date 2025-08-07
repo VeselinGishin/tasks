@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Arithmetic Progression Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input { padding: 8px; font-size: 16px; margin: 5px 0; width: 200px; }
+        label { display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<h2>Arithmetic Progression</h2>
+
+<label>First term (a₁): <input type="number" id="firstTerm" placeholder="enter positive number"></label>
+<label>Common difference (d): <input type="number" id="difference" placeholder="enter number"></label>
+<label>Number of terms (n): <input type="number" id="numTerms" placeholder="enter positive number"></label>
+
+<p id="apResult"></p>
+<p id="sumResult"></p>
+
+<script>
+    const firstTermInput = document.getElementById('firstTerm');
+    const differenceInput = document.getElementById('difference');
+    const numTermsInput = document.getElementById('numTerms');
+    const apResult = document.getElementById('apResult');
+    const sumResult = document.getElementById('sumResult');
+
+    function generateAP(a1, d, n) {
+        const sequence = [];
+        for (let i = 0; i < n; i++) {
+            sequence.push(a1 + i * d);
+        }
+        return sequence;
+    }
+
+    function sumAP(a1, d, n) {
+        return (n / 2) * (2 * a1 + (n - 1) * d);
+    }
+
+    function updateOutput() {
+        const a1 = parseFloat(firstTermInput.value);
+        const d = parseFloat(differenceInput.value);
+        const n = parseInt(numTermsInput.value);
+
+        if (isNaN(a1) || isNaN(d) || isNaN(n) || n <= 0) {
+            apResult.textContent = '';
+            sumResult.textContent = 'Please enter valid numbers (n > 0).';
+            return;
+        }
+
+        const apSequence = generateAP(a1, d, n);
+        const apSum = sumAP(a1, d, n);
+
+        apResult.textContent = `AP sequence: ${apSequence.join(', ')}`;
+        sumResult.textContent = `Sum of AP: ${apSum}`;
+    }
+
+    firstTermInput.addEventListener('input', updateOutput);
+    differenceInput.addEventListener('input', updateOutput);
+    numTermsInput.addEventListener('input', updateOutput);
+</script>
+
+</body>
+</html>
