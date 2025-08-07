@@ -37,11 +37,11 @@
     return result;
   }
 
-  function factorialRecursive(n) {
+  const factorialRecursive = n => {
     if (n < 0) return "Not defined";
     if (n === 0 || n === 1) return 1;
     return n * factorialRecursive(n - 1);
-  }
+  };
 
   function updateResult() {
     const input = document.getElementById("numberInput").value;
@@ -53,11 +53,11 @@
     }
 
     const iterativeResult = factorialIterative(n);
-    const recursiveResult = factorialRecursive(n);
+  //  const recursiveResult = factorialRecursive(n);
 
     document.getElementById("result").innerHTML = `
         Iterative result: ${iterativeResult}<br>
-        Recursive result: ${recursiveResult}
+
       `;
   }
 
