@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Knight Drag with No More Moves Alert</title>
+    <style>
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            width: 480px;
+            height: 480px;
+            border: 2px solid #333;
+            user-select: none;
+        }
+        .square {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            position: relative;
+        }
+        .white {
+            background-color: #f0d9b5;
+        }
+        .black {
+            background-color: #b58863;
+        }
+        .highlight {
+            outline: 3px solid black;
+        }
+        .marker {
+            color: red;
+            font-size: 32px;
+            position: absolute;
+        }
+        .knight {
+            cursor: grab;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chessboard" id="chessboard"></div>
+
+<script>
+    const board = document.getElementById('chessboard');
+    let knightPosition = null;
+    let legalMoves = [];
+    const visitedSquares = new Set();
+
+    function isOnBoard(row, col) {
+        return row >= 0 && row < 8 && col >= 0 && col < 8;
+    }
+
+    function getKnightMoves(row, col) {
+        const moves = [
+            [row + 2, col + 1],
+            [row + 2, col - 1],
+            [row - 2, col + 1],
+            [row - 2, col - 1],
+            [row + 1, col + 2],
+            [row + 1, col - 2],
+            [row - 1, col + 2],
+            [row - 1, col - 2],
+        ];
+        return moves.filter(([r, c]) => isOnBoard(r, c) && !visitedSquares.has(`${r}-${c}`));
+    }
+
+    function renderBoard() {
+        board.innerHTML = '';
+
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                const square = document.createElement('div');
+                square.classList.add('square');
+                square.classList.add((row + col) % 2 === 0 ? 'white' : 'black');
+                square.dataset.row = row;
+                square.dataset.col = col;
+
+                const squareKey = `${row}-${col}`;
+
+                if (
+                    visitedSquares.has(squareKey) &&
+                    !(knightPosition && knightPosition.row === row && knightPosition.col === col)
+                ) {
+                    const marker = document.createElement('div');
+                    marker.classList.add('marker');
+                    marker.innerHTML = '❌';
+                    square.appendChild(marker);
+                }
+
+                if (knightPosition && knightPosition.row === row && knightPosition.col === col) {
+                    const knight = document.createElement('div');
+                    knight.innerHTML = '&#9816;';
+                    knight.classList.add('knight');
+                    knight.draggable = true;
+
+                    knight.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', `${row},${col}`);
+                    });
+
+                    square.appendChild(knight);
+                }
+
+                if (legalMoves.some(([r, c]) => r === row && c === col)) {
+                    square.classList.add('highlight');
+                }
+
+                square.addEventListener('click', () => {
+                    if (!knightPosition) {
+                        knightPosition = { row, col };
+                        visitedSquares.add(`${row}-${col}`);
+                        legalMoves = getKnightMoves(row, col);
+                        renderBoard();
+                    }
+                });
+
+                square.addEventListener('dragover', (e) => {
+                    if (legalMoves.some(([r, c]) => r == row && c == col)) {
+                        e.preventDefault();
+                    }
+                });
+
+                square.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const to = { row: parseInt(square.dataset.row), col: parseInt(square.dataset.col) };
+                    const toKey = `${to.row}-${to.col}`;
+
+                    const isLegal = legalMoves.some(([r, c]) => r === to.row && c === to.col);
+
+                    if (isLegal && !visitedSquares.has(toKey)) {
+                        const fromKey = `${knightPosition.row}-${knightPosition.col}`;
+                        visitedSquares.add(fromKey);
+
+                        knightPosition = to;
+                        visitedSquares.add(toKey);
+
+                        legalMoves = getKnightMoves(to.row, to.col);
+
+                        renderBoard();
+
+                        // Alert if no moves left
+                        if (legalMoves.length === 0) {
+                            alert("You don't have any moves!");
+                        }
+                    }
+                });
+
+                board.appendChild(square);
+            }
+        }
+    }
+
+    renderBoard();
+</script>
+
+</body>
+</html>
