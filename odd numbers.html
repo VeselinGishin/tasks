@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Odd Number Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input {
+            font-size: 16px;
+            padding: 8px;
+            margin: 5px 0;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Check if a Number is Odd</h2>
+
+<label for="numberInput"></label><input type="number" id="numberInput" placeholder="Enter a number">
+<p id="result"></p>
+
+<script>
+    function isOdd(num) {
+        return (num & 1) === 1;
+    }
+
+    const input = document.getElementById("numberInput");
+    const resultElement = document.getElementById("result");
+
+    input.addEventListener("input", () => {
+        const number = parseInt(input.value, 10);
+
+        if (isNaN(number)) {
+            resultElement.textContent = "Please enter a valid number.";
+            return;
+        }
+
+        resultElement.textContent = number + (isOdd(number) ? " is an odd number." : " is an even number.");
+    });
+</script>
+
+</body>
+</html>
